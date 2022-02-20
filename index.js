@@ -1,4 +1,5 @@
 const express = require("express");
+const lineReader = require("line-reader");
 const dotenv = require("dotenv").config();
 const nodemailer = require("nodemailer");
 
@@ -17,19 +18,23 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-let mailOptions = {
-  from: process.env.MAIL_ID, // Your Mail ID
-  to: "", // Receiers Mail ID
-  subject: "First mail from nodemailer", // Subject Line of your mail
-  text: "Mail sent using automated node js program", // Body of your Mail ID
-};
+lineReader.eachLine("Mails.txt", (line, last) => {
+  Mail = line.split(" : ");
 
-transporter.sendMail(mailOptions, function (err, success) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("Mail sent successfully");
-  }
+  let mailOptions = {
+    from: process.env.MAIL_ID, // Your Mail ID
+    to: Mail[1], // Receiers Mail ID
+    subject: "Hello " + Mail[0] + " this is Vishnu", // Subject Line of your mail
+    text: "This is a mail sent using automated nodejs program. Just ignore it.", // Body of your Mail ID
+  };
+
+  transporter.sendMail(mailOptions, function (err, success) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Mail sent successfully");
+    }
+  });
 });
 
 app.get("/", (req, res) => {
