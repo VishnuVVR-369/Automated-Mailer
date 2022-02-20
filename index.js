@@ -18,7 +18,7 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-lineReader.eachLine("Mails.txt", (line, last) => {
+lineReader.eachLine("Mails.txt", (line, last) => { // Mails.txt is a text file which contains names and mail ids in the form NAME : MAILID
   Mail = line.split(" : ");
 
   let mailOptions = {
