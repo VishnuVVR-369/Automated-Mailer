@@ -1,6 +1,7 @@
 const express = require("express");
-const dotenv = require("dotenv").config();
+const lineReader = require("line-reader");
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 const app = express();
 
@@ -17,19 +18,24 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-let mailOptions = {
-  from: process.env.MAIL_ID, // Your Mail ID
-  to: "", // Receiers Mail ID
-  subject: "First mail from nodemailer", // Subject Line of your mail
-  text: "Mail sent using automated node js program", // Body of your Mail ID
-};
+lineReader.eachLine("Mails.txt", (line, last) => {
+  // Mails.txt is a text file which contains names and mail ids in the form NAME : MAILID
+  Mail = line.split(" : ");
 
-transporter.sendMail(mailOptions, function (err, success) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("Mail sent successfully");
-  }
+  let mailOptions = {
+    from: process.env.MAIL_ID, // Your Mail ID
+    to: Mail[1], // Receiers Mail ID
+    subject: "Hello " + Mail[0], // Subject Line of your mail
+    text: "This is a mail sent using automated nodejs program. Just ignore it.", // Body of your Mail ID
+  };
+
+  transporter.sendMail(mailOptions, function (err, success) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Mail sent successfully");
+    }
+  });
 });
 
 app.get("/", (req, res) => {
