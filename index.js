@@ -1,7 +1,7 @@
 const express = require("express");
 const lineReader = require("line-reader");
-const dotenv = require("dotenv").config();
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 const app = express();
 
@@ -18,13 +18,14 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-lineReader.eachLine("Mails.txt", (line, last) => { // Mails.txt is a text file which contains names and mail ids in the form NAME : MAILID
+lineReader.eachLine("Mails.txt", (line, last) => {
+  // Mails.txt is a text file which contains names and mail ids in the form NAME : MAILID
   Mail = line.split(" : ");
 
   let mailOptions = {
     from: process.env.MAIL_ID, // Your Mail ID
     to: Mail[1], // Receiers Mail ID
-    subject: "Hello " + Mail[0] + " this is Vishnu", // Subject Line of your mail
+    subject: "Hello " + Mail[0], // Subject Line of your mail
     text: "This is a mail sent using automated nodejs program. Just ignore it.", // Body of your Mail ID
   };
 
